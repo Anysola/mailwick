@@ -10,7 +10,9 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/inbox-light.png" alt="Mailwick inbox" width="900">
+  <img src="docs/demo.gif" alt="Mailwick demo: signing in, reading and replying with undo send, searching, dark theme and switching to Japanese and Arabic" width="800">
+  <br>
+  <sub><a href="docs/demo.mp4">Full-quality video (MP4)</a></sub>
 </p>
 
 Mailwick is a webmail front end. It doesn't run a mail server or keep a copy of your mail. It connects to the mail server you already have, such as Stalwart, Dovecot, Postfix+Dovecot, mailcow or a hosted provider, over IMAP and SMTP. People sign in with their existing email address and password.
