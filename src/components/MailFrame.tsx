@@ -10,7 +10,10 @@ function frameDoc(html: string, opts: { images: boolean; plain: boolean; dark: b
   const csp = `default-src 'none'; img-src ${img}; style-src 'unsafe-inline'; font-src data:${opts.images ? " https:" : ""}; media-src 'none'; frame-src 'none'; form-action 'none'`;
   const fg = opts.plain && opts.dark ? "#e4e1e9" : "#1b1b21";
   const link = opts.plain && opts.dark ? "#bfc1ff" : "#4c52c7";
-  return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><base target="_blank"><style>
+  // must match the iframe's own color-scheme, otherwise the browser paints an opaque (white) backdrop behind it
+  const scheme = opts.plain && opts.dark ? "dark" : "light";
+  return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><meta name="color-scheme" content="${scheme}"><base target="_blank"><style>
+:root{color-scheme:${scheme}}
 html,body{margin:0;padding:0;background:transparent}
 body{font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:${fg};word-wrap:break-word;overflow-wrap:anywhere;overflow-y:hidden;display:flow-root}
 a{color:${link}}
