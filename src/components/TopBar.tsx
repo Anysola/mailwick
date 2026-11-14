@@ -141,7 +141,7 @@ export function TopBar(p: Props) {
             aria-controls="search-view"
             role="combobox"
             autoComplete="off"
-            className="h-full min-w-0 flex-1 bg-transparent px-2 type-body-large text-fg outline-none placeholder:text-muted md:px-4"
+            className="h-full min-w-0 flex-1 text-ellipsis bg-transparent px-2 type-body-large text-fg outline-none placeholder:text-muted md:px-4"
           />
           {p.query ? (
             <IconButton label={t("topbar.clearSearch")} onClick={() => { p.onQuery(""); p.onSearch(""); p.searchRef.current?.focus(); }}>
@@ -256,6 +256,7 @@ export function TopBar(p: Props) {
             label={t("topbar.theme")}
             value={p.theme}
             onChange={p.onTheme}
+            fit
             options={[
               { value: "light", label: t("topbar.light"), icon: "light_mode" },
               { value: "dark", label: t("topbar.dark"), icon: "dark_mode" },

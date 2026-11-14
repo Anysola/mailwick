@@ -381,8 +381,9 @@ export function Composer({ init, contacts, onClose, onQueue, onError, onDraftSav
         </div>
 
         {/* attachments */}
+        {/* not shrink-0: in a short window it gives way (and scrolls) so the Send bar stays on screen */}
         {(refs.length > 0 || files.length > 0) && (
-          <div className="flex max-h-[120px] shrink-0 flex-wrap gap-2 overflow-y-auto px-5 py-2.5">
+          <div className="flex max-h-[120px] min-h-[52px] flex-wrap gap-2 overflow-y-auto px-5 py-2.5">
             {refs.map((r) => (
               <Chip key={`r${r.index}`} name={r.filename} size={r.size} onRemove={() => { setRefs((x) => x.filter((y) => y !== r)); touch(); }} />
             ))}
@@ -403,7 +404,8 @@ export function Composer({ init, contacts, onClose, onQueue, onError, onDraftSav
           <div className="ms-1 flex items-center">
             <IconButton label={t("composer.attach")} onClick={() => fileInput.current?.click()}><Icon name="attach_file" /></IconButton>
             <input ref={fileInput} type="file" multiple hidden onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }} />
-            <div className="mx-1 h-5 w-px bg-line" />
+            {/* the formatting buttons it separates are hidden on phones */}
+            <div className="mx-1 hidden h-5 w-px bg-line sm:block" />
             <div className="hidden items-center sm:flex">
               {FORMAT.map(([cmd, icon, labelKey]) => (
                 <IconButton
@@ -544,7 +546,7 @@ function RecipientField({
                   e.stopPropagation();
                   onChange(value.filter((v) => v !== a));
                 }}
-                className="sl grid h-6 w-6 place-items-center rounded-full"
+                className="sl grid h-6 w-6 shrink-0 place-items-center rounded-full"
                 aria-label={t("composer.removeRecipient", { address: a.address })}
               >
                 <Icon name="close" size={18} />

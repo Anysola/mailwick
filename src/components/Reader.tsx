@@ -340,33 +340,40 @@ function MessageCard({
       <div className="flex items-start gap-3.5 pt-3">
         <Avatar addr={from} size={40} />
         <div className="min-w-0 flex-1">
-          <div className="flex items-start gap-2">
-            <button type="button" onClick={single ? undefined : onToggle} className="min-w-0 flex-1 text-left">
-              <div className="flex flex-wrap items-baseline gap-x-2">
-                <span dir="auto" className="type-title-medium text-fg">{displayName(from)}</span>
-                {from?.name && <span className="truncate type-body-medium text-muted">{from.address}</span>}
-              </div>
-            </button>
-            <span className="shrink-0 pt-0.5 type-body-small text-muted tabular-nums" data-tip={longDate(item.date)}>
-              {mediumDate(item.date)}
-              {rel && <span className="hidden sm:inline"> ({rel})</span>}
-            </span>
-            {msg && (
-              <div className="-me-2 -mt-2 flex shrink-0 items-center">
-                <IconButton label={t("reader.reply")} onClick={() => actions.reply(msg, "reply")}><Icon name="reply" size={20} /></IconButton>
-                <IconButton ref={moreRef} label={t("reader.more")} onClick={() => setMore((v) => !v)}><Icon name="more_vert" size={20} /></IconButton>
-                <Popover anchor={moreRef} open={more} onClose={() => setMore(false)} align="end" className="w-[240px]">
-                  <MenuItem icon={<Icon name="reply" />} hint="R" onClick={() => { setMore(false); actions.reply(msg, "reply"); }}>{t("reader.reply")}</MenuItem>
-                  <MenuItem icon={<Icon name="reply_all" />} hint="A" onClick={() => { setMore(false); actions.reply(msg, "replyAll"); }}>{t("reader.replyAll")}</MenuItem>
-                  <MenuItem icon={<Icon name="forward" />} hint="F" onClick={() => { setMore(false); actions.forward(msg); }}>{t("reader.forward")}</MenuItem>
-                  <MenuDivider />
-                  {msg.unsubscribe && (
-                    <MenuItem icon={<Icon name="unsubscribe" />} onClick={() => { setMore(false); unsubscribe(msg, actions); }}>{t("reader.unsubscribe")}</MenuItem>
-                  )}
-                  <MenuItem icon={<Icon name="print" />} onClick={() => { setMore(false); printMessage(msg, msg.subject, locale); }}>{t("reader.print")}</MenuItem>
-                  <MenuItem icon={<Icon name="download" />} onClick={() => { setMore(false); window.location.href = `/api/raw?folder=${encodeURIComponent(msg.folder)}&uid=${msg.uid}`; }}>{t("reader.download")}</MenuItem>
-                </Popover>
-              </div>
+          {/* The date and actions float at the end, so the name and the address wrap around them and
+              take the full width below. In a flex row they kept their column for every line: on a phone
+              or a 1024px laptop the name broke over three lines and the address was cut at ~110px. */}
+          <div className="relative flow-root min-h-8 text-left leading-5 rtl:text-right">
+            {!single && <button type="button" onClick={onToggle} aria-label={displayName(from)} className="absolute inset-0" />}
+            <div className="relative float-end ms-2 flex items-start gap-2">
+              <span className="pt-0.5 type-body-small text-muted tabular-nums" data-tip={longDate(item.date)}>
+                {mediumDate(item.date)}
+                {rel && <span className="hidden sm:inline"> ({rel})</span>}
+              </span>
+              {msg && (
+                <div className="-my-2 -me-2 flex shrink-0 items-center">
+                  <IconButton label={t("reader.reply")} onClick={() => actions.reply(msg, "reply")}><Icon name="reply" size={20} /></IconButton>
+                  <IconButton ref={moreRef} label={t("reader.more")} onClick={() => setMore((v) => !v)}><Icon name="more_vert" size={20} /></IconButton>
+                  <Popover anchor={moreRef} open={more} onClose={() => setMore(false)} align="end" className="w-[240px]">
+                    <MenuItem icon={<Icon name="reply" />} hint="R" onClick={() => { setMore(false); actions.reply(msg, "reply"); }}>{t("reader.reply")}</MenuItem>
+                    <MenuItem icon={<Icon name="reply_all" />} hint="A" onClick={() => { setMore(false); actions.reply(msg, "replyAll"); }}>{t("reader.replyAll")}</MenuItem>
+                    <MenuItem icon={<Icon name="forward" />} hint="F" onClick={() => { setMore(false); actions.forward(msg); }}>{t("reader.forward")}</MenuItem>
+                    <MenuDivider />
+                    {msg.unsubscribe && (
+                      <MenuItem icon={<Icon name="unsubscribe" />} onClick={() => { setMore(false); unsubscribe(msg, actions); }}>{t("reader.unsubscribe")}</MenuItem>
+                    )}
+                    <MenuItem icon={<Icon name="print" />} onClick={() => { setMore(false); printMessage(msg, msg.subject, locale); }}>{t("reader.print")}</MenuItem>
+                    <MenuItem icon={<Icon name="download" />} onClick={() => { setMore(false); window.location.href = `/api/raw?folder=${encodeURIComponent(msg.folder)}&uid=${msg.uid}`; }}>{t("reader.download")}</MenuItem>
+                  </Popover>
+                </div>
+              )}
+            </div>
+            <span dir="auto" className="me-2 type-title-medium text-fg">{displayName(from)}</span>
+            {/* inline-flex keeps the address on the name's baseline (a truncating inline-block sits on its bottom edge) */}
+            {from?.name && (
+              <span className="inline-flex max-w-full">
+                <span className="truncate type-body-medium text-muted">{from.address}</span>
+              </span>
             )}
           </div>
           <button

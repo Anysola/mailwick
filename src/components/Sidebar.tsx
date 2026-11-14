@@ -258,14 +258,17 @@ export function NavRail({
             {...bind(f.path)}
             className="group flex w-full flex-col items-center gap-1 pb-1.5 pt-0.5"
           >
-            <span
-              className={cx(
-                "sl relative grid h-8 w-14 place-items-center rounded-full transition-colors duration-200",
-                active ? "bg-select text-on-select" : "text-muted",
-                dropOn === f.path && "ring-2 ring-accent",
-              )}
-            >
-              <FolderGlyph f={f} active={active} />
+            <span className="relative">
+              <span
+                className={cx(
+                  "sl relative grid h-8 w-14 place-items-center rounded-full transition-colors duration-200",
+                  active ? "bg-select text-on-select" : "text-muted",
+                  dropOn === f.path && "ring-2 ring-accent",
+                )}
+              >
+                <FolderGlyph f={f} active={active} />
+              </span>
+              {/* outside the indicator: .sl clips its children for the ripple, which cut a three-digit count */}
               {count > 0 && <Badge n={f.special === "inbox" ? count : undefined} className={cx("absolute", f.special === "inbox" ? "start-[30px] top-0" : "start-[34px] top-1")} />}
             </span>
             <span className={cx("max-w-full truncate px-1 type-label-medium", active ? "text-fg" : "text-muted")}>{folderShortLabel(f, t)}</span>

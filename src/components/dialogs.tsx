@@ -165,6 +165,7 @@ export function SettingsDialog({
               value={undoSeconds}
               onChange={setUndoSeconds}
               className="w-full sm:w-auto"
+              fit
               options={UNDO_CHOICES.map((n) => ({ value: n, label: n ? t("settings.seconds", { count: n }) : t("settings.off") }))}
             />
           </SettingRow>

@@ -78,12 +78,12 @@ export function MessageList(p: Props) {
   }, [p.list?.folder, p.list?.page, p.appliedQuery, p.filter, p.scope]);
 
   return (
-    <section className="flex h-full min-w-0 flex-col">
+    <section className="@container flex h-full min-w-0 flex-col">
       {/* title + toolbar: switches to the M3 "scrolled" surface when the list scrolls */}
       <div className={cx("shrink-0 transition-colors duration-200 ease-std", scrolled && "bg-panel-2 dark:bg-surface-high")}>
         <header className="flex h-16 items-center gap-1 ps-5 pe-2 md:pt-1">
           {p.appliedQuery ? (
-            <div className="flex min-w-0 flex-1 items-center gap-3">
+            <div className="flex min-w-0 flex-initial items-center gap-3">
               <h1 className="shrink-0 type-title-large">{t("list.search")}</h1>
               <button
                 type="button"
@@ -96,14 +96,22 @@ export function MessageList(p: Props) {
               </button>
             </div>
           ) : (
-            <div className="flex min-w-0 flex-1 items-baseline gap-3">
+            <div className="flex min-w-0 flex-initial items-baseline gap-3">
               <h1 className="truncate type-title-large">{folderLabel(p.folder, t)}</h1>
               {p.folder && p.folder.unseen > 0 && <span className="shrink-0 type-body-medium text-muted tabular-nums">{t("list.unreadCount", { count: p.folder.unseen })}</span>}
             </div>
           )}
+          {/* The page range takes only the room the title and unread count leave; when it doesn't fit, it
+              wraps onto a clipped second line (after the empty first item) instead of cutting the folder
+              name to "J…" (Junk, 1,178 unread, in the 400px list). */}
+          <div className="flex h-4 min-w-0 flex-1 flex-wrap justify-end overflow-hidden">
+            <span className="h-4" />
+            {!!p.list && total > p.list.pageSize && (
+              <span className="me-1 hidden whitespace-nowrap type-body-small text-muted tabular-nums sm:inline">{from}–{to} / {total}</span>
+            )}
+          </div>
           {!!p.list && total > p.list.pageSize && (
-            <div className="flex shrink-0 items-center type-body-small text-muted tabular-nums">
-              <span className="me-1 hidden sm:inline">{from}–{to} / {total}</span>
+            <div className="flex shrink-0 items-center">
               <IconButton label={t("list.prevPage")} disabled={p.list.page === 0} onClick={() => p.onPage(p.list!.page - 1)}>
                 <Icon name="chevron_left" />
               </IconButton>
@@ -136,7 +144,8 @@ export function MessageList(p: Props) {
           {someSelected ? (
             <div className="flex min-w-0 flex-1 items-center gap-0.5 animate-fade">
               <span className="me-1 shrink-0 whitespace-nowrap type-title-small text-fg tabular-nums">{t("list.selected", { count: p.allInFolder ? total : p.selected.size })}</span>
-              <div className="ms-auto flex shrink-0 items-center overflow-x-auto">
+              {/* seven 40px actions don't fit next to the count in a 400px list or on a phone (Delete was cut off): 32px there */}
+              <div className="ms-auto flex min-w-0 items-center overflow-x-auto [&>button]:@max-[440px]:h-8 [&>button]:@max-[440px]:w-8">
                 <IconButton label={t("list.markRead")} onClick={() => p.onBulk("read")}><Icon name="mark_email_read" /></IconButton>
                 <IconButton label={t("list.markUnread")} onClick={() => p.onBulk("unread")}><Icon name="mark_email_unread" /></IconButton>
                 <IconButton label={t("list.star")} onClick={() => p.onBulk("star")}><Icon name="star" /></IconButton>
@@ -148,7 +157,10 @@ export function MessageList(p: Props) {
             </div>
           ) : p.appliedQuery ? (
             <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
-              <FilterChip selected={p.scope === "folder"} onClick={() => p.onScope("folder")} icon="folder">{folderLabel(p.folder, t) || t("list.thisFolder")}</FilterChip>
+              {/* capped: a long folder name pushed "All folders" and "Unread" out of the list */}
+              <FilterChip selected={p.scope === "folder"} onClick={() => p.onScope("folder")} icon="folder" className="max-w-40">
+                {folderLabel(p.folder, t) || t("list.thisFolder")}
+              </FilterChip>
               <FilterChip selected={p.scope === "all"} onClick={() => p.onScope("all")} icon="stacks">{t("list.allFolders")}</FilterChip>
               <span className="flex-1" />
               <FilterChip selected={p.filter === "unread"} onClick={() => p.onFilter(p.filter === "unread" ? "all" : "unread")} icon="mark_email_unread">{t("list.unread")}</FilterChip>

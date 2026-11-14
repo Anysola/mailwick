@@ -243,18 +243,21 @@ export function Popover({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number; right: boolean; up: boolean } | null>(null);
+  const [box, setBox] = useState<{ top: number; bottom: number; left: number; right: number } | null>(null);
+  // the menu's own size, measured once it is in the page; until then a typical menu is assumed
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const { mounted, closing } = usePresence(open, 120);
 
   useLayoutEffect(() => {
     if (!open || !anchor.current) return;
     const r = anchor.current.getBoundingClientRect();
-    const up = r.bottom + 340 > window.innerHeight && r.top > 340;
-    // "start"/"end" follow the writing direction: in RTL, "end" is the anchor's left edge
-    const rtl = document.documentElement.dir === "rtl";
-    const toRight = (align === "end") !== rtl;
-    setPos({ top: up ? r.top - 4 : r.bottom + 4, left: toRight ? r.right : r.left, right: toRight, up });
+    setBox({ top: r.top, bottom: r.bottom, left: r.left, right: r.right });
+    setSize(null);
   }, [open, anchor, align]);
+
+  useLayoutEffect(() => {
+    if (mounted && box && !size && ref.current) setSize({ w: ref.current.offsetWidth, h: ref.current.scrollHeight });
+  }, [mounted, box, size]);
 
   useEffect(() => {
     if (!open) return;
@@ -293,21 +296,35 @@ export function Popover({
     };
   }, [open, anchor, onClose]);
 
-  if (!mounted || !pos) return null;
+  if (!mounted || !box) return null;
+  // Keep the menu inside the window (8px margin): opened from a button near an edge, such as a
+  // folder's menu in the phone drawer, or low in a short window, it used to run past it.
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const below = H - box.bottom - 12;
+  const above = box.top - 12;
+  const up = (size?.h ?? 340) > below && above > below;
+  const room = up ? above : below;
+  // "start"/"end" follow the writing direction: in RTL, "end" is the anchor's left edge
+  const rtl = document.documentElement.dir === "rtl";
+  const toRight = (align === "end") !== rtl;
+  const fit = (v: number) => (size ? Math.min(Math.max(8, v), Math.max(8, W - 8 - size.w)) : Math.max(8, v));
   return createPortal(
     <div
       ref={ref}
       role="menu"
       className={cx(
         "fixed z-[60] min-w-[200px] max-w-[calc(100vw-16px)] rounded-[4px] bg-panel-2 py-2 shadow-e2 dark:bg-surface-high",
-        closing ? "m3-menu-out" : cx("m3-menu-in", pos.up && "up"),
+        size && size.h > room && "overflow-y-auto overscroll-contain",
+        closing ? "m3-menu-out" : cx("m3-menu-in", up && "up"),
         className,
       )}
       style={{
-        top: pos.up ? undefined : pos.top,
-        bottom: pos.up ? window.innerHeight - pos.top : undefined,
-        left: pos.right ? undefined : Math.max(8, pos.left),
-        right: pos.right ? Math.max(8, window.innerWidth - pos.left) : undefined,
+        top: up ? undefined : box.bottom + 4,
+        bottom: up ? H - box.top + 4 : undefined,
+        left: toRight ? undefined : fit(box.left),
+        right: toRight ? fit(W - box.right) : undefined,
+        maxHeight: size && size.h > room ? Math.max(120, room) : undefined,
       }}
     >
       {children}
@@ -430,7 +447,8 @@ export function Modal({
         tabIndex={-1}
         className={cx(
           "relative flex w-full flex-col bg-panel-2 shadow-e3 outline-none dark:bg-surface-high",
-          fullScreenOnMobile ? "h-full max-h-none rounded-none sm:h-auto sm:max-h-[85vh] sm:rounded-[28px]" : "max-h-[85vh] rounded-[28px]",
+          // full screen on phones: h-full grew with the content in the grid, pushing the buttons off screen
+          fullScreenOnMobile ? "h-dvh max-h-dvh rounded-none sm:h-auto sm:max-h-[85vh] sm:rounded-[28px]" : "max-h-[85vh] rounded-[28px]",
           closing ? "m3-dialog-out" : "m3-dialog-in",
         )}
         style={{ maxWidth: width, minWidth: Math.min(280, width) }}
@@ -523,19 +541,25 @@ export function Checkbox({
   );
 }
 
-/** M3 segmented button (single select): check mark on the selected one. */
+/**
+ * M3 segmented button (single select): check mark on the selected one.
+ * Equal segments by default; `fit` sizes them to their labels for tight spots, where equal
+ * segments cut the selected label (the check mark makes it the widest).
+ */
 export function Segmented<T extends string | number>({
   value,
   onChange,
   options,
   className,
   label,
+  fit,
 }: {
   value: T;
   onChange: (v: T) => void;
   options: { value: T; label: string; icon?: string }[];
   className?: string;
   label: string;
+  fit?: boolean;
 }) {
   return (
     <div role="radiogroup" aria-label={label} className={cx("flex h-10 overflow-hidden rounded-full border border-faint", className)}>
@@ -549,7 +573,8 @@ export function Segmented<T extends string | number>({
             aria-checked={on}
             onClick={() => onChange(o.value)}
             className={cx(
-              "sl flex min-w-0 flex-1 items-center justify-center gap-1.5 px-3 type-label-large transition-colors duration-200",
+              "sl flex min-w-0 items-center justify-center gap-1.5 px-3 type-label-large transition-colors duration-200",
+              fit ? "flex-auto" : "flex-1",
               i > 0 && "border-s border-faint",
               on ? "bg-select text-on-select" : "text-fg",
             )}
@@ -563,8 +588,20 @@ export function Segmented<T extends string | number>({
   );
 }
 
-/** M3 filter chip. */
-export function FilterChip({ selected, onClick, children, icon }: { selected: boolean; onClick: () => void; children: React.ReactNode; icon?: string }) {
+/** M3 filter chip. A max width in `className` ends a long label (a folder's name) with an ellipsis. */
+export function FilterChip({
+  selected,
+  onClick,
+  children,
+  icon,
+  className,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  icon?: string;
+  className?: string;
+}) {
   return (
     <button
       type="button"
@@ -573,10 +610,11 @@ export function FilterChip({ selected, onClick, children, icon }: { selected: bo
       className={cx(
         "sl flex h-8 shrink-0 items-center gap-2 rounded-lg type-label-large transition-colors duration-200",
         selected ? "bg-select ps-2 pe-4 text-on-select" : cx("border border-faint pe-4 text-muted", icon ? "ps-2" : "ps-4"),
+        className,
       )}
     >
       {selected ? <Icon name="check" size={18} /> : icon && <Icon name={icon} size={18} />}
-      {children}
+      <span className="truncate">{children}</span>
     </button>
   );
 }
