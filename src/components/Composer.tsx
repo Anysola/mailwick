@@ -307,94 +307,97 @@ export function Composer({ init, contacts, onClose, onQueue, onError, onDraftSav
           <IconButton label={t("composer.closeSave")} size="sm" onClick={close}><Icon name="close" size={22} /></IconButton>
         </div>
 
-        {/* fields */}
-        <div className="shrink-0 px-5">
-          <RecipientField
-            label={t("common.to")}
-            value={to}
-            onChange={(v) => { setTo(v); touch(); }}
-            contacts={contacts}
-            autoFocus={init.mode === "new" || init.mode === "forward"}
-            right={
-              (!showCc || !showBcc) && (
-                <span className="flex items-center">
-                  {!showCc && (
-                    <button type="button" onClick={() => setShowCc(true)} className="sl h-8 rounded-full px-3 type-label-large text-accent">{t("common.cc")}</button>
-                  )}
-                  {!showBcc && (
-                    <button type="button" onClick={() => setShowBcc(true)} className="sl h-8 rounded-full px-3 type-label-large text-accent">{t("common.bcc")}</button>
-                  )}
-                </span>
-              )
-            }
-          />
-          {showCc && <RecipientField label={t("common.cc")} value={cc} onChange={(v) => { setCc(v); touch(); }} contacts={contacts} autoFocus />}
-          {showBcc && <RecipientField label={t("common.bcc")} value={bcc} onChange={(v) => { setBcc(v); touch(); }} contacts={contacts} autoFocus={!showCc || cc.length > 0} />}
-          <div className="flex items-center border-b border-line-2">
-            <input
-              value={subject}
-              onChange={(e) => { setSubject(e.target.value); touch(); }}
-              placeholder={t("composer.subject")}
-              dir="auto"
-              className="h-12 w-full bg-transparent text-[15px] font-medium outline-none placeholder:font-normal placeholder:text-muted"
+        {/* Recipients, body and attachments: when a short window can't hold them, this part scrolls above
+            the Send bar and the body keeps a few lines (it was squeezed to nothing at 1440x480). */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          {/* fields */}
+          <div className="shrink-0 px-5">
+            <RecipientField
+              label={t("common.to")}
+              value={to}
+              onChange={(v) => { setTo(v); touch(); }}
+              contacts={contacts}
+              autoFocus={init.mode === "new" || init.mode === "forward"}
+              right={
+                (!showCc || !showBcc) && (
+                  <span className="flex items-center">
+                    {!showCc && (
+                      <button type="button" onClick={() => setShowCc(true)} className="sl h-8 rounded-full px-3 type-label-large text-accent">{t("common.cc")}</button>
+                    )}
+                    {!showBcc && (
+                      <button type="button" onClick={() => setShowBcc(true)} className="sl h-8 rounded-full px-3 type-label-large text-accent">{t("common.bcc")}</button>
+                    )}
+                  </span>
+                )
+              }
             />
+            {showCc && <RecipientField label={t("common.cc")} value={cc} onChange={(v) => { setCc(v); touch(); }} contacts={contacts} autoFocus />}
+            {showBcc && <RecipientField label={t("common.bcc")} value={bcc} onChange={(v) => { setBcc(v); touch(); }} contacts={contacts} autoFocus={!showCc || cc.length > 0} />}
+            <div className="flex items-center border-b border-line-2">
+              <input
+                value={subject}
+                onChange={(e) => { setSubject(e.target.value); touch(); }}
+                placeholder={t("composer.subject")}
+                dir="auto"
+                className="h-12 w-full bg-transparent text-[15px] font-medium outline-none placeholder:font-normal placeholder:text-muted"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* body */}
-        <div className="relative flex-1 overflow-y-auto px-5 py-4" onClick={(e) => e.target === e.currentTarget && editorRef.current?.focus()}>
-          <div
-            ref={editorRef}
-            contentEditable
-            suppressContentEditableWarning
-            onInput={touch}
-            onPaste={(e) => {
-              // pasted files (screenshots) become attachments; rich text is simplified
-              if (e.clipboardData.files.length) {
-                e.preventDefault();
-                addFiles(e.clipboardData.files);
-                return;
-              }
-              const html = e.clipboardData.getData("text/html");
-              if (html) {
-                e.preventDefault();
-                const tmp = document.createElement("div");
-                tmp.innerHTML = html;
-                tmp.querySelectorAll("script,style,meta,link,iframe,object,embed,form,input,button,svg").forEach((n) => n.remove());
-                tmp.querySelectorAll("*").forEach((n) => {
-                  [...n.attributes].forEach((a) => {
-                    if (a.name.startsWith("on") || a.name === "class" || a.name === "id" || (a.name === "style" && n.tagName !== "SPAN")) n.removeAttribute(a.name);
+          {/* body */}
+          <div className="relative min-h-32 flex-1 overflow-y-auto px-5 py-4" onClick={(e) => e.target === e.currentTarget && editorRef.current?.focus()}>
+            <div
+              ref={editorRef}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={touch}
+              onPaste={(e) => {
+                // pasted files (screenshots) become attachments; rich text is simplified
+                if (e.clipboardData.files.length) {
+                  e.preventDefault();
+                  addFiles(e.clipboardData.files);
+                  return;
+                }
+                const html = e.clipboardData.getData("text/html");
+                if (html) {
+                  e.preventDefault();
+                  const tmp = document.createElement("div");
+                  tmp.innerHTML = html;
+                  tmp.querySelectorAll("script,style,meta,link,iframe,object,embed,form,input,button,svg").forEach((n) => n.remove());
+                  tmp.querySelectorAll("*").forEach((n) => {
+                    [...n.attributes].forEach((a) => {
+                      if (a.name.startsWith("on") || a.name === "class" || a.name === "id" || (a.name === "style" && n.tagName !== "SPAN")) n.removeAttribute(a.name);
+                    });
                   });
-                });
-                document.execCommand("insertHTML", false, tmp.innerHTML);
-              }
-            }}
-            data-placeholder={t("composer.placeholder")}
-            dir="auto"
-            className="editor min-h-[160px] text-[15px]"
-          />
-          {dragOver && (
-            <div className="pointer-events-none absolute inset-3 grid place-items-center rounded-2xl border-2 border-dashed border-accent bg-accent-soft/90 text-[15px] font-medium text-on-accent-soft animate-fade">
-              {t("composer.dropFiles")}
+                  document.execCommand("insertHTML", false, tmp.innerHTML);
+                }
+              }}
+              data-placeholder={t("composer.placeholder")}
+              dir="auto"
+              className="editor min-h-[160px] text-[15px]"
+            />
+            {dragOver && (
+              <div className="pointer-events-none absolute inset-3 grid place-items-center rounded-2xl border-2 border-dashed border-accent bg-accent-soft/90 text-[15px] font-medium text-on-accent-soft animate-fade">
+                {t("composer.dropFiles")}
+              </div>
+            )}
+          </div>
+
+          {/* attachments */}
+          {(refs.length > 0 || files.length > 0) && (
+            <div className="flex max-h-[120px] shrink-0 flex-wrap gap-2 overflow-y-auto px-5 py-2.5">
+              {refs.map((r) => (
+                <Chip key={`r${r.index}`} name={r.filename} size={r.size} onRemove={() => { setRefs((x) => x.filter((y) => y !== r)); touch(); }} />
+              ))}
+              {files.map((f) => (
+                <Chip key={f.id} name={f.file.name} size={f.file.size} onRemove={() => { setFiles((x) => x.filter((y) => y.id !== f.id)); touch(); }} />
+              ))}
+              <span className={cx("self-center text-[11.5px] tabular-nums", totalSize > MAX_TOTAL ? "text-danger" : "text-faint")}>
+                {fileSize(totalSize)} / 25 MB
+              </span>
             </div>
           )}
         </div>
-
-        {/* attachments */}
-        {/* not shrink-0: in a short window it gives way (and scrolls) so the Send bar stays on screen */}
-        {(refs.length > 0 || files.length > 0) && (
-          <div className="flex max-h-[120px] min-h-[52px] flex-wrap gap-2 overflow-y-auto px-5 py-2.5">
-            {refs.map((r) => (
-              <Chip key={`r${r.index}`} name={r.filename} size={r.size} onRemove={() => { setRefs((x) => x.filter((y) => y !== r)); touch(); }} />
-            ))}
-            {files.map((f) => (
-              <Chip key={f.id} name={f.file.name} size={f.file.size} onRemove={() => { setFiles((x) => x.filter((y) => y.id !== f.id)); touch(); }} />
-            ))}
-            <span className={cx("self-center text-[11.5px] tabular-nums", totalSize > MAX_TOTAL ? "text-danger" : "text-faint")}>
-              {fileSize(totalSize)} / 25 MB
-            </span>
-          </div>
-        )}
 
         {/* bottom bar */}
         <div className="flex shrink-0 items-center gap-1 px-3 pb-3 pt-2">

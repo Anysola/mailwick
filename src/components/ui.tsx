@@ -588,18 +588,20 @@ export function Segmented<T extends string | number>({
   );
 }
 
-/** M3 filter chip. A max width in `className` ends a long label (a folder's name) with an ellipsis. */
+/**
+ * M3 filter chip: the check mark only when selected (no leading icon otherwise, which also keeps
+ * three chips inside a 400px list in Turkish and Arabic). A max width in `className` ends a long
+ * label (a folder's name) with an ellipsis.
+ */
 export function FilterChip({
   selected,
   onClick,
   children,
-  icon,
   className,
 }: {
   selected: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  icon?: string;
   className?: string;
 }) {
   return (
@@ -609,11 +611,13 @@ export function FilterChip({
       onClick={onClick}
       className={cx(
         "sl flex h-8 shrink-0 items-center gap-2 rounded-lg type-label-large transition-colors duration-200",
-        selected ? "bg-select ps-2 pe-4 text-on-select" : cx("border border-faint pe-4 text-muted", icon ? "ps-2" : "ps-4"),
+        // 12px instead of 16px side padding on phones, where the Turkish search chips next to the
+        // select-all checkbox were 11px too wide
+        selected ? "bg-select ps-2 pe-4 text-on-select max-sm:pe-3" : "border border-faint px-4 text-muted max-sm:px-3",
         className,
       )}
     >
-      {selected ? <Icon name="check" size={18} /> : icon && <Icon name={icon} size={18} />}
+      {selected && <Icon name="check" size={18} />}
       <span className="truncate">{children}</span>
     </button>
   );

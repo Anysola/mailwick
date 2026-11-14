@@ -536,7 +536,7 @@ function Attachments({ msg, list }: { msg: MessageFull; list: Attachment[] }) {
           const isImg = /^image\/(png|jpe?g|gif|webp|avif|bmp)$/i.test(a.contentType);
           const href = PREVIEW.test(a.contentType) ? `${base}&index=${a.index}&inline=1` : `${base}&index=${a.index}`;
           return (
-            <div key={a.index} className="group relative flex items-center gap-3 rounded-xl border border-line p-2.5 pe-1.5">
+            <div key={a.index} className="group relative flex items-center gap-3 rounded-xl border border-line p-2.5 pe-1.5 md:can-hover:pe-2.5">
               <a href={href} target="_blank" rel="noopener" className="sl absolute inset-0 rounded-xl text-fg" aria-label={t("reader.openFile", { name: a.filename })} />
               {isImg ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -548,10 +548,16 @@ function Attachments({ msg, list }: { msg: MessageFull; list: Attachment[] }) {
                 <div className="truncate type-title-small text-fg">{a.filename}</div>
                 <div className="type-body-small text-muted">{fileSize(a.size)}</div>
               </div>
+              {/* With a pointer (md+), Download floats over the end of the name on hover or keyboard focus,
+                  in the tile's own color, so the name gets the full width at rest; touch keeps its slot. */}
               <a
                 href={`${base}&index=${a.index}`}
                 download={a.filename}
-                className="sl relative z-10 grid h-10 w-10 place-items-center rounded-full text-muted transition-opacity md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+                className={cx(
+                  "sl relative z-10 grid h-10 w-10 place-items-center rounded-full text-muted transition-opacity md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100",
+                  "md:can-hover:absolute md:can-hover:end-1.5 md:can-hover:top-1/2 md:can-hover:-translate-y-1/2 md:can-hover:bg-panel",
+                  "md:can-hover:before:bg-fg md:can-hover:group-hover:before:opacity-[0.08] md:can-hover:group-has-[:focus-visible]:opacity-100 md:can-hover:group-has-[:focus-visible]:before:opacity-10",
+                )}
                 data-tip={t("reader.downloadShort")}
                 aria-label={t("reader.downloadFile", { name: a.filename })}
               >

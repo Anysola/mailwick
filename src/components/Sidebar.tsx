@@ -109,17 +109,26 @@ export function Sidebar({
           }}
           {...bind(f.path)}
           className={cx(
-            "sl flex h-14 w-full items-center gap-3 rounded-full pe-6 type-label-large transition-colors duration-200 compact:h-12",
+            // Touch screens keep a slot for the options button; with a pointer the name and count use
+            // the full row and the button appears over the end of the row on hover or keyboard focus.
+            "sl flex h-14 w-full items-center gap-3 rounded-full pe-12 type-label-large transition-colors duration-200 can-hover:pe-6 compact:h-12",
             active ? "bg-select text-on-select" : "text-muted",
             dropOn === f.path && "bg-accent-soft text-on-accent-soft ring-2 ring-accent",
-            "pe-12",
           )}
           style={{ paddingInlineStart: 16 + Math.min(f.depth, 4) * 16 }}
         >
           <FolderGlyph f={f} active={active} />
           <span className={cx("flex-1 truncate text-left", active && "font-bold")}>{folderLabel(f, t)}</span>
           {count > 0 && (
-            <span className={cx("tabular-nums", active && "font-bold", "group-hover/row:invisible")}>{count > 999 ? "999+" : count}</span>
+            <span
+              className={cx(
+                "tabular-nums group-hover/row:invisible can-hover:group-has-[:focus-visible]/row:invisible",
+                active && "font-bold",
+                folderMenu?.path === f.path && "can-hover:invisible",
+              )}
+            >
+              {count > 999 ? "999+" : count}
+            </span>
           )}
         </button>
         {(
@@ -129,7 +138,12 @@ export function Sidebar({
             onClick={(e) => openFolderMenu(f, e.currentTarget)}
             className={cx(
               "absolute end-3 top-1/2 -translate-y-1/2",
-              folderMenu?.path === f.path ? "opacity-100" : "opacity-0 focus-visible:opacity-100 group-hover/row:opacity-100",
+              // over the name: the row's own color (and its hover tint), so the text doesn't show through
+              active ? "can-hover:bg-select can-hover:before:bg-on-select" : modal ? "can-hover:bg-panel-2 can-hover:dark:bg-panel" : "can-hover:bg-bg",
+              "can-hover:group-hover/row:before:opacity-[0.08] can-hover:group-has-[:focus-visible]/row:before:opacity-10",
+              folderMenu?.path === f.path
+                ? "opacity-100"
+                : "opacity-0 focus-visible:opacity-100 group-hover/row:opacity-100 can-hover:group-has-[:focus-visible]/row:opacity-100",
             )}
           >
             <Icon name="more_vert" size={20} />

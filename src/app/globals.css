@@ -2,6 +2,8 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 @custom-variant compact (&:where([data-density="compact"], [data-density="compact"] *));
+/* pointer devices: controls that only show on hover can float over text instead of keeping a slot */
+@custom-variant can-hover (@media (hover: hover));
 
 /* ============================================================
    Material 3 color roles — default: Indigo seed, Tonal Spot.

@@ -157,19 +157,21 @@ export function MessageList(p: Props) {
             </div>
           ) : p.appliedQuery ? (
             <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
-              {/* capped: a long folder name pushed "All folders" and "Unread" out of the list */}
-              <FilterChip selected={p.scope === "folder"} onClick={() => p.onScope("folder")} icon="folder" className="max-w-40">
-                {folderLabel(p.folder, t) || t("list.thisFolder")}
+              {/* the rail's short name ("Gelen", not "Gelen Kutusu"), capped for long folder names: the three
+                  chips have to fit the 400px list next to the select-all checkbox */}
+              <FilterChip selected={p.scope === "folder"} onClick={() => p.onScope("folder")} className="max-w-40">
+                {folderShortLabel(p.folder, t) || t("list.thisFolder")}
               </FilterChip>
-              <FilterChip selected={p.scope === "all"} onClick={() => p.onScope("all")} icon="stacks">{t("list.allFolders")}</FilterChip>
-              <span className="flex-1" />
-              <FilterChip selected={p.filter === "unread"} onClick={() => p.onFilter(p.filter === "unread" ? "all" : "unread")} icon="mark_email_unread">{t("list.unread")}</FilterChip>
+              <FilterChip selected={p.scope === "all"} onClick={() => p.onScope("all")}>{t("list.allFolders")}</FilterChip>
+              <FilterChip selected={p.filter === "unread"} onClick={() => p.onFilter(p.filter === "unread" ? "all" : "unread")} className="ms-auto">
+                {t("list.unread")}
+              </FilterChip>
             </div>
           ) : (
             <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
               <FilterChip selected={p.filter === "all"} onClick={() => p.onFilter("all")}>{t("list.all")}</FilterChip>
-              <FilterChip selected={p.filter === "unread"} onClick={() => p.onFilter("unread")} icon="mark_email_unread">{t("list.unread")}</FilterChip>
-              <FilterChip selected={p.filter === "flagged"} onClick={() => p.onFilter("flagged")} icon="star">{t("list.starred")}</FilterChip>
+              <FilterChip selected={p.filter === "unread"} onClick={() => p.onFilter("unread")}>{t("list.unread")}</FilterChip>
+              <FilterChip selected={p.filter === "flagged"} onClick={() => p.onFilter("flagged")}>{t("list.starred")}</FilterChip>
             </div>
           )}
         </div>
