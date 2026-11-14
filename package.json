@@ -21,7 +21,7 @@
     "imapflow": "^2.3.0",
     "ioredis": "^6.0.0",
     "mailparser": "^3.9.37",
-    "next": "^16.4.0",
+    "next": "^16.4.6",
     "nodemailer": "^10.0.16",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
