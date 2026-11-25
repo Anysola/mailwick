@@ -74,13 +74,13 @@
     "hidePassword": "Hide password",
     "remember": "Remember me for 30 days",
     "submit": "Sign in",
-    "failed": "Couldn't sign in",
+    "failed": "Couldn’t sign in",
     "note": "Use the password of your email account. The connection is encrypted and your password is kept encrypted only for the length of your session."
   },
   "errors": {
     "badOrigin": "Invalid request origin",
     "notSignedIn": "Not signed in",
-    "passwordChanged": "Your mail password may have changed. Please sign in again.",
+    "passwordChanged": "Your mail password may have changed. Sign in again.",
     "server": "There was a problem talking to the mail server",
     "missingField": "Missing field",
     "fieldTooLong": "Field is too long",
@@ -97,18 +97,18 @@
       "one": "Too many attempts. Try again in {count} minute.",
       "other": "Too many attempts. Try again in {count} minutes."
     },
-    "unreachable": "Couldn't reach the mail server. Please try again shortly.",
-    "mfa": "This account has two-step verification turned on. Create an app password in your mail provider's account settings and sign in with it here.",
+    "unreachable": "Couldn’t reach the mail server.",
+    "mfa": "This account has two-step verification turned on. Create an app password in your mail provider’s account settings and sign in with it here.",
     "wrongCredentials": "Wrong email address or password",
-    "sendLimit": "You've reached the hourly sending limit",
-    "folderNameEmpty": "Folder name can't be empty",
+    "sendLimit": "You’ve reached the hourly sending limit",
+    "folderNameEmpty": "Folder name can’t be empty",
     "folderNameLong": "Folder name can be at most 80 characters",
-    "folderNameChars": "Folder names can't contain / \\ . * % \"",
-    "folderNameReserved": "This name can't be used",
+    "folderNameChars": "Folder names can’t contain / \\ . * % \"",
+    "folderNameReserved": "This name can’t be used",
     "folderNotFound": "Folder not found",
-    "systemFolder": "System folders can't be changed",
+    "systemFolder": "System folders can’t be changed",
     "parentNotFound": "Parent folder not found",
-    "systemParent": "Folders can't be created inside system folders",
+    "systemParent": "Folders can’t be created inside system folders",
     "folderExists": "A folder with this name already exists",
     "onlyTrashJunk": "Only Trash and Junk can be emptied",
     "deleteSubfoldersFirst": "Delete or move the subfolders first",
@@ -120,13 +120,13 @@
     "attachmentNotFound": "Attachment not found",
     "tooManyRecipients": "At most 100 recipients per field",
     "badAddress": "Invalid address: {address}",
-    "attachmentsTooBig": "Attachments can't exceed 25 MB in total",
-    "smtpAuth": "The SMTP server rejected the login",
-    "sendFailed": "Couldn't send",
-    "sendFailedReason": "Couldn't send: {reason}",
+    "attachmentsTooBig": "Attachments can’t exceed 25 MB in total",
+    "smtpAuth": "The SMTP server rejected the sign-in",
+    "sendFailed": "Couldn’t send",
+    "sendFailedReason": "Couldn’t send: {reason}",
     "noRecipients": "Add at least one recipient",
     "noDraftsFolder": "There is no Drafts folder",
-    "sentNotSaved": "Couldn't save to the Sent folder"
+    "sentNotSaved": "Couldn’t save to the Sent folder"
   },
   "topbar": {
     "searchMail": "Search mail",
@@ -144,11 +144,11 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System",
-    "appearance": "Appearance & colors",
-    "settings": "Settings & signature",
+    "appearance": "Appearance and colors",
+    "settings": "Settings and signature",
     "shortcuts": "Keyboard shortcuts",
     "signOut": "Sign out",
-    "signingOut": "Signing out"
+    "signingOut": "Signing out…"
   },
   "list": {
     "search": "Search",
@@ -187,14 +187,14 @@
     },
     "truncatedBefore": "Lots of results; showing the newest 200 messages from each folder. Narrow your search with operators like",
     "truncatedOr": "or",
-    "loadFailed": "Couldn't load the list",
+    "loadFailed": "Couldn’t load the list",
     "noResults": "No results",
     "noResultsAll": "Nothing found for “{query}” in any folder.",
     "noResultsFolder": "Nothing found for “{query}” in this folder.",
     "searchAllFolders": "Search all folders",
     "noUnread": "No unread mail",
     "noStarred": "No starred mail",
-    "allDone": "Looks like you're all caught up.",
+    "allDone": "All caught up.",
     "emptyFolder": "This folder is empty",
     "emptyFolderText": "New messages will show up here.",
     "toLine": "To: {names}",
@@ -213,7 +213,7 @@
     "unstar": "Unstar (S)",
     "prev": "Previous (K)",
     "next": "Next (J)",
-    "openFailed": "Couldn't open the message",
+    "openFailed": "Couldn’t open the message",
     "junkWarning": "This message is in Junk. Be careful with its links and attachments.",
     "notJunk": "Not junk",
     "reply": "Reply",
@@ -243,7 +243,7 @@
     "hintCompose": "new message",
     "hintShortcuts": "shortcuts",
     "unsubscribeTitle": "Unsubscribe?",
-    "unsubscribeText": "A page from {host} will open in a new tab so you can leave {sender}'s list.",
+    "unsubscribeText": "A page from {host} will open in a new tab so you can leave {sender}’s list.",
     "thisSender": "this sender",
     "theSender": "the sender",
     "showQuote": "Show quoted text",
@@ -259,8 +259,8 @@
     },
     "deletePermanentTitle": "Delete forever?",
     "deletePermanentText": {
-      "one": "This message will be deleted forever. This can't be undone.",
-      "other": "{count} messages will be deleted forever. This can't be undone."
+      "one": "This message will be deleted forever. This can’t be undone.",
+      "other": "{count} messages will be deleted forever. This can’t be undone."
     },
     "deletedForever": "Deleted forever",
     "movedToTrash": {
@@ -294,8 +294,8 @@
     "deleteAllPermanentTitle": "Delete all forever?",
     "trashAllTitle": "Move all to Trash?",
     "deleteAllPermanentText": {
-      "one": "{count} message in this folder will be deleted forever. This can't be undone.",
-      "other": "{count} messages in this folder will be deleted forever. This can't be undone."
+      "one": "{count} message in this folder will be deleted forever. This can’t be undone.",
+      "other": "{count} messages in this folder will be deleted forever. This can’t be undone."
     },
     "trashAllText": {
       "one": "{count} message in this folder will be moved to Trash.",
@@ -328,8 +328,8 @@
     },
     "emptyTitle": "Empty {folder}?",
     "emptyText": {
-      "one": "{count} message will be deleted forever. This can't be undone.",
-      "other": "{count} messages will be deleted forever. This can't be undone."
+      "one": "{count} message will be deleted forever. This can’t be undone.",
+      "other": "{count} messages will be deleted forever. This can’t be undone."
     },
     "emptyConfirm": "Empty",
     "emptied": "{folder} emptied",
@@ -338,8 +338,8 @@
       "other": "{folder}: {count} messages marked as read"
     },
     "draftDeleted": "Draft deleted",
-    "noNotifications": "This browser doesn't support notifications",
-    "notifyDenied": "Notification permission wasn't granted; you can allow it in your browser's site settings",
+    "noNotifications": "This browser doesn’t support notifications",
+    "notifyDenied": "Notification permission wasn’t granted; you can allow it in your browser’s site settings",
     "newMessages": {
       "one": "{count} new message",
       "other": "{count} new messages"
@@ -360,7 +360,7 @@
     "sendKey": "Send ({key}+Enter)",
     "saving": "Saving…",
     "draftSaved": "Draft saved",
-    "draftFailed": "Couldn't save draft",
+    "draftFailed": "Couldn’t save draft",
     "titleReply": "Reply",
     "titleForward": "Forward",
     "titleNew": "New message",
@@ -397,7 +397,7 @@
     "languageHint": "Language of the interface. Automatic follows your browser.",
     "languageAuto": "Automatic",
     "images": "Always show remote images",
-    "imagesHint": "While off, senders can't use tracking images to learn that you opened their mail.",
+    "imagesHint": "While off, senders can’t use tracking images to learn that you opened their mail.",
     "imagesLabel": "Show remote images",
     "notify": "Desktop notifications",
     "notifyHint": "Notifies you of new mail in the Inbox while the tab is open. Only for this browser.",

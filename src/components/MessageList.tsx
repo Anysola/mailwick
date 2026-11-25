@@ -230,7 +230,11 @@ export function MessageList(p: Props) {
               action={!searchingAll ? { label: t("list.searchAllFolders"), run: () => p.onScope("all") } : undefined}
             />
           ) : p.filter !== "all" ? (
-            <Empty icon="done_all" title={p.filter === "unread" ? t("list.noUnread") : t("list.noStarred")} text={t("list.allDone")} />
+            <Empty
+              icon={p.filter === "unread" ? "done_all" : "star"}
+              title={p.filter === "unread" ? t("list.noUnread") : t("list.noStarred")}
+              text={p.filter === "unread" ? t("list.allDone") : undefined}
+            />
           ) : (
             <Empty icon="inbox" title={t("list.emptyFolder")} text={t("list.emptyFolderText")} />
           )
@@ -426,14 +430,14 @@ function ListSkeleton() {
   );
 }
 
-function Empty({ title, text, icon, action }: { title: string; text: string; icon: string; action?: { label: string; run: () => void } }) {
+function Empty({ title, text, icon, action }: { title: string; text?: string; icon: string; action?: { label: string; run: () => void } }) {
   return (
     <div className="flex h-full min-h-[280px] flex-col items-center justify-center px-8 text-center">
       <div className="mb-4 grid h-20 w-20 place-items-center rounded-full bg-accent-soft text-on-accent-soft">
         <Icon name={icon} size={36} />
       </div>
       <div className="type-title-medium">{title}</div>
-      <div className="mt-1 max-w-[280px] type-body-medium text-muted">{text}</div>
+      {text && <div className="mt-1 max-w-[280px] type-body-medium text-muted">{text}</div>}
       {action && <Button variant="tonal" className="mt-4" icon="stacks" onClick={action.run}>{action.label}</Button>}
     </div>
   );

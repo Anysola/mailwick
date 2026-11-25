@@ -80,7 +80,7 @@
   "errors": {
     "badOrigin": "Geçersiz istek kaynağı",
     "notSignedIn": "Giriş yapılmamış",
-    "passwordChanged": "Mail parolan değişmiş olabilir. Lütfen yeniden giriş yap.",
+    "passwordChanged": "Mail parolan değişmiş olabilir. Yeniden giriş yap.",
     "server": "Mail sunucusuyla iletişimde bir sorun oluştu",
     "missingField": "Eksik alan",
     "fieldTooLong": "Alan çok uzun",
@@ -97,7 +97,7 @@
       "one": "Çok fazla deneme. {count} dakika sonra tekrar dene.",
       "other": "Çok fazla deneme. {count} dakika sonra tekrar dene."
     },
-    "unreachable": "Mail sunucusuna ulaşılamadı, biraz sonra tekrar dene.",
+    "unreachable": "Mail sunucusuna ulaşılamadı.",
     "mfa": "Bu hesapta iki adımlı doğrulama açık. Mail sağlayıcının hesap ayarlarından bir uygulama parolası oluştur ve burada o parolayla giriş yap.",
     "wrongCredentials": "Mail adresi ya da parola yanlış",
     "sendLimit": "Saatlik gönderim sınırına ulaştın",
@@ -148,7 +148,7 @@
     "settings": "Ayarlar ve imza",
     "shortcuts": "Klavye kısayolları",
     "signOut": "Çıkış yap",
-    "signingOut": "Çıkış yapılıyor"
+    "signingOut": "Çıkış yapılıyor…"
   },
   "list": {
     "search": "Arama",
@@ -173,7 +173,7 @@
     "unread": "Okunmamış",
     "starred": "Yıldızlı",
     "allInFolderSelected": {
-      "one": "{folder} klasöründeki {count} iletinin tümü seçili.",
+      "one": "{folder} klasöründeki {count} ileti seçili.",
       "other": "{folder} klasöründeki {count} iletinin tümü seçili."
     },
     "clearSelection": "Seçimi temizle",
@@ -182,7 +182,7 @@
       "other": "Bu sayfadaki {count} ileti seçili."
     },
     "selectAllInFolder": {
-      "one": "Klasördeki {count} iletinin tümünü seç",
+      "one": "Klasördeki {count} iletiyi seç",
       "other": "Klasördeki {count} iletinin tümünü seç"
     },
     "truncatedBefore": "Çok fazla sonuç var; her klasörden en yeni 200 ileti gösteriliyor. Aramanı şu gibi operatörlerle daralt:",
@@ -244,7 +244,7 @@
     "hintShortcuts": "kısayollar",
     "unsubscribeTitle": "Abonelikten çıkılsın mı?",
     "unsubscribeText": "{sender} listesinden çıkmak için {host} sayfası yeni sekmede açılacak.",
-    "thisSender": "bu göndericinin",
+    "thisSender": "Bu gönderenin",
     "theSender": "gönderenin",
     "showQuote": "Alıntıyı göster",
     "hideQuote": "Alıntıyı gizle",
@@ -292,7 +292,7 @@
       "other": "Klasördeki {count} ileti yıldızlandı"
     },
     "deleteAllPermanentTitle": "Tümü kalıcı olarak silinsin mi?",
-    "trashAllTitle": "Tümü çöpe taşınsın mı?",
+    "trashAllTitle": "Tümü Çöp Kutusu'na taşınsın mı?",
     "deleteAllPermanentText": {
       "one": "Klasördeki {count} ileti kalıcı olarak silinecek. Bu işlem geri alınamaz.",
       "other": "Klasördeki {count} ileti kalıcı olarak silinecek. Bu işlem geri alınamaz."
@@ -301,14 +301,14 @@
       "one": "Klasördeki {count} ileti Çöp Kutusu'na taşınacak.",
       "other": "Klasördeki {count} ileti Çöp Kutusu'na taşınacak."
     },
-    "moveToTrash": "Çöpe taşı",
+    "moveToTrash": "Çöp Kutusu'na taşı",
     "allDeletedForever": {
       "one": "Klasördeki {count} ileti kalıcı olarak silindi",
       "other": "Klasördeki {count} ileti kalıcı olarak silindi"
     },
     "allMovedToTrash": {
-      "one": "Klasördeki {count} ileti çöpe taşındı",
-      "other": "Klasördeki {count} ileti çöpe taşındı"
+      "one": "Klasördeki {count} ileti Çöp Kutusu'na taşındı",
+      "other": "Klasördeki {count} ileti Çöp Kutusu'na taşındı"
     },
     "allMovedTo": {
       "one": "Klasördeki {count} ileti {folder} klasörüne taşındı",
@@ -344,7 +344,7 @@
       "one": "{count} yeni ileti",
       "other": "{count} yeni ileti"
     },
-    "mail": "Mail"
+    "mail": "Posta"
   },
   "composer": {
     "bold": "Kalın",
@@ -442,7 +442,7 @@
     "title": "Klavye kısayolları",
     "general": "Genel",
     "navigation": "Gezinme",
-    "mail": "Mail",
+    "mail": "İleti",
     "composing": "Yazarken",
     "newMessage": "Yeni ileti",
     "search": "Ara",
